@@ -1,0 +1,54 @@
+START
+    REPEAT (Main Loop)
+        REPEAT (Applicant Search Loop)
+            Lh = "0", Hh = "0", Fh = "0", sesV = 1, r = 0
+            Display "Housing Community Acronym: "
+            Input H_A
+            Display "Applicant Name: "
+            Input A_N
+            Display "Gross Salary: "
+            Input G_S
+            Display "Total Deductions: "
+            Input S_D
+
+            N_S = G_S - S_D
+
+            IF H_A == "HHD" AND sesV == 1 THEN
+                hH = 440000 * 0.75
+                IF N_S >= hH THEN
+                    Display "Applicant Qualify", Hh = "1"
+                ELSE
+                    Display "Applicant Not Qualify", sesV = 0
+                ENDIF
+                Hh = "1" // Logic matches your C code modification
+            ELSE IF H_A == "FHD" ... (repeat logic for FHD and LPH)
+            ENDIF
+
+            IF sesV == 0 THEN
+                Display "Input data for another applicant? (y/n)"
+                Input c_
+                IF c_ == 'y' THEN r = 1 ELSE EXIT
+            ENDIF
+
+            IF Lh == "1" THEN H_C = "La Parfaite Harmonie"
+            IF Hh == "1" THEN H_C = "Hauraruni Housing Development"
+            IF Fh == "1" THEN H_C = "Fitzhope Housing Development"
+        UNTIL r == 0
+
+        Display "Total Utility Expenses: "
+        Input U_I
+        Display "Total Living Expenses: "
+        Input L_E
+
+        eX = U_I + L_E
+        S = N_S - eX
+
+        IF S >= (eX * 0.5) THEN eX_A = 1 ELSE eX_A = 0
+
+        Display Summary (A_N, H_C, Cost, eX_A)
+
+        Display "Input Data for another applicant? (y/n)"
+        Input c_1
+    UNTIL c_1 == 'n'
+END
+
