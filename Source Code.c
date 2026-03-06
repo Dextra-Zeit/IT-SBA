@@ -63,8 +63,8 @@ if (strcmp(Fh, "1")==0) { strcpy(H_C, "Fitzhope Housing Development"); }
 //printf("%s\n",H_C);
 float eX, U_I, L_E, eX_A=0, S;
 
-printf("Applicant Total Utility Expenses: 		");scanf("%f", &U_I);
-printf("Applicant Total Living Expenses: 		");scanf("%f", &L_E);
+printf("Applicant Total Utility Expenses: 		");scanf("%f", &U_I);printf("%f", &U_I);
+printf("Applicant Total Living Expenses: 		");scanf("%f", &L_E);printf("%f", &L_E);
 
 eX=(U_I+L_E);
 
