@@ -32,8 +32,8 @@ r=0;
 
 printf("Housung Community Acronym (3 Letters MAX):	"); scanf("%3s", H_A);
 printf("Applicant name:					"); scanf(" %[^\n]s", A_N);
-printf("Gross Salary:					"); int G_S; scanf("%d", &G_S);
-printf("Total Salary Deductions:			"); int S_D; scanf("%d", &S_D);
+printf("Gross Salary:					"); double G_S; scanf("%lf", &G_S);
+printf("Total Salary Deductions:			"); double S_D; scanf("%lf", &S_D);
 
 
 N_S = (G_S - S_D); //printf("Net Salary: %d\n", N_S);
@@ -61,10 +61,10 @@ if (strcmp(Fh, "1")==0) { strcpy(H_C, "Fitzhope Housing Development"); }
 } while (r==1);
 // APPLICANT INIT FINISH
 //printf("%s\n",H_C);
-float eX, U_I, L_E, eX_A=0, S;
+double eX, U_I, L_E, eX_A=0, S;
 
-printf("Applicant Total Utility Expenses: 		");scanf("%f", &U_I);printf("%f", &U_I);
-printf("Applicant Total Living Expenses: 		");scanf("%f", &L_E);printf("%f", &L_E);
+printf("Applicant Total Utility Expenses: 		");scanf("%lf", &U_I);printf("%lf", U_I);
+printf("Applicant Total Living Expenses: 		");scanf("%lf", &L_E);printf("%lf", L_E);
 
 eX=(U_I+L_E);
 
