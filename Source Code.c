@@ -1,7 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+
+int vlid(const char *in) {
+// printf("trigger.");
+int deci=0;
+int i=0;
+
+if (in[i] == '-') {i++;}
+for (; in[i] != '\n' && in[i] != '\0'; i++) {
+    if (in[i]=='.') {if (deci==1) {printf ("SEGFAULT PANIC, INVALID CHARACTER '%c'", in[i]);return 1;} else deci=1;
+    } else if (!isdigit((unsigned char)in[i])) {printf ("SEGFAULT PANIC, INVALID CHARACTER '%c'", in[i]);return 1;}
+}
+return (i>0);
+}
+
 int main() {
+char tmp[1024];
 char Lh[]="0", Hh[]="0", Fh[]="0";
 int LPH; LPH = 150500;
 int HHD; HHD = 440000;
@@ -32,7 +48,12 @@ r=0;
 
 printf("Housung Community Acronym (3 Letters MAX):	"); scanf("%3s", H_A);
 printf("Applicant name:					"); scanf(" %[^\n]s", A_N);
-printf("Gross Salary:					"); double G_S; scanf("%lf", &G_S);
+printf("Gross Salary:					"); while ((getchar()) != '\n' && getchar() != EOF);
+if (fgets(tmp, sizeof(tmp), stdin)) {
+if (vlid(tmp)==1) {printf("\nFAULT. EXIT\n");fgets(tmp, sizeof(tmp), stdin);return 139;}
+}
+
+double G_S; scanf("%lf", &G_S);
 printf("Total Salary Deductions:			"); double S_D; scanf("%lf", &S_D);
 
 
@@ -63,8 +84,8 @@ if (strcmp(Fh, "1")==0) { strcpy(H_C, "Fitzhope Housing Development"); }
 //printf("%s\n",H_C);
 double eX, U_I, L_E, eX_A=0, S;
 
-printf("Applicant Total Utility Expenses: 		");scanf("%lf", &U_I);printf("%lf", U_I);
-printf("Applicant Total Living Expenses: 		");scanf("%lf", &L_E);printf("%lf", L_E);
+printf("Applicant Total Utility Expenses: 		");scanf("%lf", &U_I);
+printf("Applicant Total Living Expenses: 		");scanf("%lf", &L_E);
 
 eX=(U_I+L_E);
 
