@@ -50,7 +50,7 @@ printf("Housung Community Acronym (3 Letters MAX):	"); scanf("%3s", H_A);
 printf("Applicant name:					"); scanf(" %[^\n]s", A_N);
 printf("Gross Salary:					"); while ((getchar()) != '\n' && getchar() != EOF);
 if (fgets(tmp, sizeof(tmp), stdin)) {
-if (vlid(tmp)==1) {printf("\nFAULT. EXIT\n");fgets(tmp, sizeof(tmp), stdin);return 139;}
+if (vlid(tmp)==1) {printf("\nPaused, Press ENTER to continue . . . \n");fgets(tmp, sizeof(tmp), stdin);return 139;}
 }
 
 double G_S; scanf("%lf", &G_S);
