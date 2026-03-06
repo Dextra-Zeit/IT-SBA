@@ -61,10 +61,10 @@ if (strcmp(Fh, "1")==0) { strcpy(H_C, "Fitzhope Housing Development"); }
 } while (r==1);
 // APPLICANT INIT FINISH
 //printf("%s\n",H_C);
-int eX, U_I, L_E, eX_A=0, S;
+float eX, U_I, L_E, eX_A=0, S;
 
-printf("Applicant Total Utility Expenses: 		");scanf("%d", &U_I);
-printf("Applicant Total Living Expenses: 		");scanf("%d", &L_E);
+printf("Applicant Total Utility Expenses: 		");scanf("%f", &U_I);
+printf("Applicant Total Living Expenses: 		");scanf("%f", &L_E);
 
 eX=(U_I+L_E);
 
