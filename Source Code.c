@@ -34,7 +34,7 @@ float hL;
 char c_[2];
 char A_N[100];
 char c_1[2];
-
+double G_S;
 // MAIN
 do {
 
@@ -51,9 +51,9 @@ printf("Applicant name:					"); scanf(" %[^\n]s", A_N);
 printf("Gross Salary:					"); while ((getchar()) != '\n' && getchar() != EOF);
 if (fgets(tmp, sizeof(tmp), stdin)) {
 if (vlid(tmp)==1) {printf("\nPaused, Press ENTER to continue . . . ");fgets(tmp, sizeof(tmp), stdin);return 139;}
+G_S = strtod(tmp, NULL);
 }
 
-double G_S; scanf("%lf", &G_S);
 printf("Total Salary Deductions:			"); double S_D; scanf("%lf", &S_D);
 
 
