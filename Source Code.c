@@ -13,7 +13,7 @@ for (; in[i] != '\n' && in[i] != '\0'; i++) {
     if (in[i]=='.') {if (deci==1) {printf ("SEGFAULT PANIC, INVALID CHARACTER '%c'", in[i]);return 1;} else deci=1;
     } else if (!isdigit((unsigned char)in[i])) {printf ("SEGFAULT PANIC, INVALID CHARACTER '%c'", in[i]);return 1;}
 }
-return (i>0);
+return 0;
 }
 
 int main() {
