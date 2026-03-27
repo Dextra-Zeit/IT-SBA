@@ -10,13 +10,14 @@ int i=0;
 
 if (in[i] == '-') {i++;}
 for (; in[i] != '\n' && in[i] != '\0'; i++) {
-    if (in[i]=='.') {if (deci==1) {printf ("SEGFAULT PANIC, INVALID CHARACTER '%c'", in[i]);return 1;} else deci=1;
-    } else if (!isdigit((unsigned char)in[i])) {printf ("SEGFAULT PANIC, INVALID CHARACTER '%c'", in[i]);return 1;}
+    if (in[i]=='.') {if (deci==1) {printf ("error at token '%c'", in[i]);return 1;} else deci=1;
+    } else if (!isdigit((unsigned char)in[i])) {printf ("error at token '%c'", in[i]);return 1;}
 }
 return 0;
 }
 
 int main() {
+int c; // READ VAR, DO NOT REMOVE.
 char tmp[1024];
 char Lh[]="0", Hh[]="0", Fh[]="0";
 int LPH; LPH = 150500;
@@ -47,15 +48,42 @@ strcpy(Fh, "0");
 r=0;
 
 printf("Housung Community Acronym (3 Letters MAX):	"); scanf("%3s", H_A);
-printf("Applicant name:					"); scanf(" %[^\n]s", A_N);
-printf("Gross Salary:					"); while ((getchar()) != '\n' && getchar() != EOF);
+printf("Applicant name:		"); scanf(" %[^\n]s", A_N);
+
+printf("Gross Salary:		"); 
+
+// READ ONLY NUMBERS
+while ((c = getchar()) == '\n' && c != EOF); 
+if (c != EOF) ungetc(c, stdin);
 if (fgets(tmp, sizeof(tmp), stdin)) {
-if (vlid(tmp)==1) {printf("\nPaused, Press ENTER to continue . . . ");fgets(tmp, sizeof(tmp), stdin);return 139;}
-G_S = strtod(tmp, NULL);
+    if (strchr(tmp, '\n') == NULL) {
+        while ((c = getchar()) != '\n' && c != EOF); 
+    }
+    if (vlid(tmp) == 1) {
+        printf("\nPaused, Press ENTER to continue . . . ");
+        getchar(); 
+        return 139;
+    }
+    G_S = strtod(tmp, NULL);
 }
 
-printf("Total Salary Deductions:			"); double S_D; scanf("%lf", &S_D);
+strcpy(tmp,"0");
 
+printf("Total Salary Deductions:	"); double S_D; // scanf("%lf", &S_D);
+
+while ((c = getchar()) == '\n' && c != EOF); 
+if (c != EOF) ungetc(c, stdin);
+if (fgets(tmp, sizeof(tmp), stdin)) {
+    if (strchr(tmp, '\n') == NULL) {
+        while ((c = getchar()) != '\n' && c != EOF); 
+    }
+    if (vlid(tmp) == 1) {
+        printf("\nPaused, Press ENTER to continue . . . ");
+        getchar(); 
+        return 139;
+    }
+    S_D = strtod(tmp, NULL);
+}
 
 N_S = (G_S - S_D); //printf("Net Salary: %d\n", N_S);
 q = (N_S * 0.75); //printf("Q_STAT: %f\n", q);
@@ -84,8 +112,35 @@ if (strcmp(Fh, "1")==0) { strcpy(H_C, "Fitzhope Housing Development"); }
 //printf("%s\n",H_C);
 double eX, U_I, L_E, eX_A=0, S;
 
-printf("Applicant Total Utility Expenses: 		");scanf("%lf", &U_I);
-printf("Applicant Total Living Expenses: 		");scanf("%lf", &L_E);
+printf("Applicant Total Utility Expenses: 	");// scanf("%lf", &U_I);
+
+while ((c = getchar()) == '\n' && c != EOF); 
+if (c != EOF) ungetc(c, stdin);
+if (fgets(tmp, sizeof(tmp), stdin)) {
+    if (strchr(tmp, '\n') == NULL) {
+        while ((c = getchar()) != '\n' && c != EOF); 
+    }
+    if (vlid(tmp) == 1) {
+        printf("\nPaused, Press ENTER to continue . . . ");
+        getchar(); 
+        return 139;
+    }
+    U_I = strtod(tmp, NULL);
+}
+printf("Applicant Total Living Expenses: 	");// scanf("%lf", &L_E);
+while ((c = getchar()) == '\n' && c != EOF); 
+if (c != EOF) ungetc(c, stdin);
+if (fgets(tmp, sizeof(tmp), stdin)) {
+    if (strchr(tmp, '\n') == NULL) {
+        while ((c = getchar()) != '\n' && c != EOF); 
+    }
+    if (vlid(tmp) == 1) {
+        printf("\nPaused, Press ENTER to continue . . . ");
+        getchar(); 
+        return 139;
+    }
+    L_E = strtod(tmp, NULL);
+}
 
 eX=(U_I+L_E);
 
