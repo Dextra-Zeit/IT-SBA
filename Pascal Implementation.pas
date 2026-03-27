@@ -1,85 +1,125 @@
 program HousingApp;
-uses crt;
 
 var
-    Lh, Hh, Fh: string[2];
-    LPH, HHD, FHD, NS, GS, SD, UI, LE, EX, S, EX_A: integer;
-    r, sesV: integer;
-    HC, AN, HA: string;
-    c_short, c_long: string[2];
-    hH, hF, hL: real;
+    tmp: string;
+    flag_L, flag_H, flag_F: string; 
+    val_LPH, val_HHD, val_FHD: LongInt;
+    r_flag, sesV: integer;
+    Net_Sal: double;
+    H_Comm_Name, App_Name: string;
+    q_stat, calc_hH, calc_hF, calc_hL: double;
+    H_Acr: string[3];
+    c_str, c_1: string[1];
+    G_S, S_D, U_I, L_E, total_ex, eX_Approved, Savings: double;
+    errCode: integer;
+
+function vlid(s: string): boolean;
+var
+    d_count, j: integer;
+begin
+    d_count := 0;
+    j := 1;
+    vlid := true;
+    if Length(s) = 0 then begin vlid := false; exit; end;
+    if s[j] = '-' then j := j + 1;
+    while j <= Length(s) do
+    begin
+        if s[j] = '.' then
+        begin
+            if d_count = 1 then begin Writeln('error at token .'); vlid := false; exit; end
+            else d_count := 1;
+        end
+        else if not (s[j] in ['0'..'9']) then
+        begin
+            Writeln('error at token ', s[j]);
+            vlid := false;
+            exit;
+        end;
+        j := j + 1;
+    end;
+end;
 
 begin
-    LPH := 150500; HHD := 440000; FHD := 700500;
+    val_LPH := 150500;
+    val_HHD := 440000;
+    val_FHD := 700500;
 
     repeat
-        { APPLICANT INIT }
         repeat
-            sesV := 1; Lh := '0'; Hh := '0'; Fh := '0'; r := 0;
+            sesV := 1;
+            flag_L := '0'; flag_H := '0'; flag_F := '0';
+            r_flag := 0;
 
-            write('Housing Community Acronym (LPH, HHD, FHD): '); readln(HA);
-            write('Applicant Name: '); readln(AN);
-            write('Gross Salary: '); readln(GS);
-            write('Total Salary Deductions: '); readln(SD);
+            Write('Housing Community Acronym (3 Letters MAX): '); Readln(H_Acr);
+            Write('Applicant name: '); Readln(App_Name);
 
-            NS := GS - SD;
+            Write('Gross Salary: '); Readln(tmp);
+            if not vlid(tmp) then begin Write('Paused, Press ENTER to continue . . . '); Readln; halt; end;
+            Val(tmp, G_S, errCode);
 
-            if (HA = 'HHD') and (sesV = 1) then
+            Write('Total Salary Deductions: '); Readln(tmp);
+            if not vlid(tmp) then begin Write('Paused, Press ENTER to continue . . . '); Readln; halt; end;
+            Val(tmp, S_D, errCode);
+
+            Net_Sal := G_S - S_D;
+
+            if (H_Acr = 'HHD') and (sesV = 1) then
             begin
-                hH := HHD * 0.75;
-                if NS >= hH then begin writeln('Applicant Qualify'); Hh := '1'; end
-                else begin writeln('Applicant Not Qualify.'); sesV := 0; end;
-                Hh := '1';
+                calc_hH := val_HHD * 0.75;
+                if Net_Sal >= calc_hH then begin Writeln('Applicant Qualify'); flag_H := '1'; end
+                else begin Writeln('Applicant Not Qualify.'); sesV := 0; end;
             end;
 
-            if (HA = 'FHD') and (sesV = 1) then
+            if (H_Acr = 'FHD') and (sesV = 1) then
             begin
-                hF := FHD * 0.75;
-                if NS >= hF then begin writeln('Applicant Qualify'); Fh := '1'; end
-                else begin writeln('Applicant Not Qualify.'); sesV := 0; end;
-                Fh := '1';
+                calc_hF := val_FHD * 0.75;
+                if Net_Sal >= calc_hF then begin Writeln('Applicant Qualify'); flag_F := '1'; end
+                else begin Writeln('Applicant Not Qualify.'); sesV := 0; end;
             end;
 
-            if (HA = 'LPH') and (sesV = 1) then
+            if (H_Acr = 'LPH') and (sesV = 1) then
             begin
-                hL := LPH * 0.75;
-                if NS >= hL then begin writeln('Applicant Qualify'); Lh := '1'; end
-                else begin writeln('Applicant Not Qualify.'); sesV := 0; end;
-                Lh := '1';
+                calc_hL := val_LPH * 0.75;
+                if Net_Sal >= calc_hL then begin Writeln('Applicant Qualify'); flag_L := '1'; end
+                else begin Writeln('Applicant Not Qualify.'); sesV := 0; end;
             end;
 
             if sesV = 0 then
             begin
-                write('Input Data for another applicant? [ N | y ]: '); readln(c_short);
-                if (c_short = 'y') or (c_short = 'Y') then r := 1 else halt;
+                Write('Input Data for another applicant? [ N | y ]: '); Readln(c_str);
+                if (c_str = 'y') or (c_str = 'Y') then r_flag := 1 else r_flag := 0;
             end;
 
-            if Lh = '1' then HC := 'La Parfaite Harmonie';
-            if Hh = '1' then HC := 'Hauraruni Housing Development';
-            if Fh = '1' then HC := 'Fitzhope Housing Development';
+            if flag_L = '1' then H_Comm_Name := 'La Parfaite Harmonie';
+            if flag_H = '1' then H_Comm_Name := 'Hauraruni Housing Development';
+            if flag_F = '1' then H_Comm_Name := 'Fitzhope Housing Development';
 
-        until r = 0;
+        until r_flag = 0;
 
-        { Expense calculation }
-        write('Applicant Total Utility Expenses: '); readln(UI);
-        write('Applicant Total Living Expenses: '); readln(LE);
+        Write('Applicant Total Utility Expenses: '); Readln(tmp);
+        if not vlid(tmp) then begin Readln; halt; end;
+        Val(tmp, U_I, errCode);
 
-        EX := UI + LE;
-        S := NS - EX;
-        EX_A := 0;
-        if S >= (EX * 0.5) then EX_A := 1;
+        Write('Applicant Total Living Expenses: '); Readln(tmp);
+        if not vlid(tmp) then begin Readln; halt; end;
+        Val(tmp, L_E, errCode);
 
-        writeln('-------------------------------');
-        writeln('Applicant Name:    ', AN);
-        writeln('Housing Community: ', HC);
-        if HA = 'LPH' then writeln('Cost:              $', LPH);
-        if HA = 'FHD' then writeln('Cost:              $', FHD);
-        if HA = 'HHD' then writeln('Cost:              $', HHD);
-        
-        if EX_A = 1 then writeln('Approval Status:   Approved.')
-        else writeln('Approval Status:   Not Approved.');
+        total_ex := U_I + L_E;
+        Savings := Net_Sal - total_ex;
+        eX_Approved := 0;
+        if Savings >= (total_ex * 0.5) then eX_Approved := 1;
 
-        write('Input Data for another applicant? [ N | y ]: '); readln(c_long);
-    until (c_long <> 'y') and (c_long <> 'Y');
+        Writeln('-------------------------------');
+        Writeln('Applicant Name: ', App_Name);
+        Writeln('Housing Community: ', H_Comm_Name);
+        if H_Acr = 'LPH' then Writeln('Cost: $', val_LPH);
+        if H_Acr = 'FHD' then Writeln('Cost: $', val_FHD);
+        if H_Acr = 'HHD' then Writeln('Cost: $', val_HHD);
+
+        if eX_Approved = 1 then Writeln('Approval Status: Approved.')
+        else Writeln('Approval Status: Not Approved.');
+
+        Write('Input Data for another applicant? [ N | y ]: '); Readln(c_1);
+
+    until (c_1 <> 'y') and (c_1 <> 'Y');
 end.
-
