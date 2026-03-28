@@ -1,54 +1,138 @@
-START
-    REPEAT (Main Loop)
-        REPEAT (Applicant Search Loop)
-            Lh = "0", Hh = "0", Fh = "0", sesV = 1, r = 0
-            Display "Housing Community Acronym: "
-            Input H_A
-            Display "Applicant Name: "
-            Input A_N
-            Display "Gross Salary: "
-            Input G_S
-            Display "Total Deductions: "
-            Input S_D
+PROGRAM HousingApp
 
-            N_S = G_S - S_D
+    SET val_LPH TO 150500
+    SET val_HHD TO 440000
+    SET val_FHD TO 700500
 
-            IF H_A == "HHD" AND sesV == 1 THEN
-                hH = 440000 * 0.75
-                IF N_S >= hH THEN
-                    Display "Applicant Qualify", Hh = "1"
+    REPEAT
+        REPEAT
+            SET sesV TO 1
+            SET flag_L TO "0"
+            SET flag_H TO "0"
+            SET flag_F TO "0"
+            SET r_flag TO 0
+
+            OUTPUT "Housing Community Acronym (3 Letters MAX): "
+            INPUT H_Acr
+            OUTPUT "Applicant name: "
+            INPUT App_Name
+
+            OUTPUT "Gross Salary: "
+            INPUT tmp
+            IF NOT vlid(tmp) THEN
+                HALT
+            END IF
+            SET G_S TO StringToFloat(tmp)
+
+            OUTPUT "Total Salary Deductions: "
+            INPUT tmp
+            IF NOT vlid(tmp) THEN
+                HALT
+            END IF
+            SET S_D TO StringToFloat(tmp)
+
+            SET Net_Sal TO G_S - S_D
+
+            IF H_Acr = "HHD" AND sesV = 1 THEN
+                SET calc_hH TO val_HHD * 0.75
+                IF Net_Sal >= calc_hH THEN
+                    OUTPUT "Applicant Qualify"
+                    SET flag_H TO "1"
                 ELSE
-                    Display "Applicant Not Qualify", sesV = 0
-                ENDIF
-                Hh = "1" // Logic matches your C code modification
-            ELSE IF H_A == "FHD" ... (repeat logic for FHD and LPH)
-            ENDIF
+                    OUTPUT "Applicant Not Qualify."
+                    SET sesV TO 0
+                END IF
+            END IF
 
-            IF sesV == 0 THEN
-                Display "Input data for another applicant? (y/n)"
-                Input c_
-                IF c_ == 'y' THEN r = 1 ELSE EXIT
-            ENDIF
+            IF H_Acr = "FHD" AND sesV = 1 THEN
+                SET calc_hF TO val_FHD * 0.75
+                IF Net_Sal >= calc_hF THEN
+                    OUTPUT "Applicant Qualify"
+                    SET flag_F TO "1"
+                ELSE
+                    OUTPUT "Applicant Not Qualify."
+                    SET sesV TO 0
+                END IF
+            END IF
 
-            IF Lh == "1" THEN H_C = "La Parfaite Harmonie"
-            IF Hh == "1" THEN H_C = "Hauraruni Housing Development"
-            IF Fh == "1" THEN H_C = "Fitzhope Housing Development"
-        UNTIL r == 0
+            IF H_Acr = "LPH" AND sesV = 1 THEN
+                SET calc_hL TO val_LPH * 0.75
+                IF Net_Sal >= calc_hL THEN
+                    OUTPUT "Applicant Qualify"
+                    SET flag_L TO "1"
+                ELSE
+                    OUTPUT "Applicant Not Qualify."
+                    SET sesV TO 0
+                END IF
+            END IF
 
-        Display "Total Utility Expenses: "
-        Input U_I
-        Display "Total Living Expenses: "
-        Input L_E
+            IF sesV = 0 THEN
+                OUTPUT "Input Data for another applicant? [ N | y ]: "
+                INPUT c_str
+                IF c_str = "y" OR c_str = "Y" THEN
+                    SET r_flag TO 1
+                ELSE
+                    SET r_flag TO 0
+                END IF
+            END IF
 
-        eX = U_I + L_E
-        S = N_S - eX
+            IF flag_L = "1" THEN
+                SET H_Comm_Name TO "La Parfaite Harmonie"
+            END IF
+            IF flag_H = "1" THEN
+                SET H_Comm_Name TO "Hauraruni Housing Development"
+            END IF
+            IF flag_F = "1" THEN
+                SET H_Comm_Name TO "Fitzhope Housing Development"
+            END IF
 
-        IF S >= (eX * 0.5) THEN eX_A = 1 ELSE eX_A = 0
+        UNTIL r_flag = 0
 
-        Display Summary (A_N, H_C, Cost, eX_A)
+        OUTPUT "Applicant Total Utility Expenses: "
+        INPUT tmp
+        IF NOT vlid(tmp) THEN
+            HALT
+        END IF
+        SET U_I TO StringToFloat(tmp)
 
-        Display "Input Data for another applicant? (y/n)"
-        Input c_1
-    UNTIL c_1 == 'n'
-END
+        OUTPUT "Applicant Total Living Expenses: "
+        INPUT tmp
+        IF NOT vlid(tmp) THEN
+            HALT
+        END IF
+        SET L_E TO StringToFloat(tmp)
 
+        SET total_ex TO U_I + L_E
+        SET Savings TO Net_Sal - total_ex
+        SET eX_Approved TO 0
+        
+        IF Savings >= (total_ex * 0.5) THEN
+            SET eX_Approved TO 1
+        END IF
+
+        OUTPUT "-------------------------------"
+        OUTPUT "Applicant Name: ", App_Name
+        OUTPUT "Housing Community: ", H_Comm_Name
+        
+        IF H_Acr = "LPH" THEN
+            OUTPUT "Cost: $", val_LPH
+        END IF
+        IF H_Acr = "FHD" THEN
+            OUTPUT "Cost: $", val_FHD
+        END IF
+        IF H_Acr = "HHD" THEN
+            OUTPUT "Cost: $", val_HHD
+        END IF
+
+        IF eX_Approved = 1 THEN
+            OUTPUT "Approval Status: Approved."
+        ELSE
+            OUTPUT "Approval Status: Not Approved."
+        END IF
+
+        OUTPUT "Input Data for another applicant? [ N | y ]: "
+        INPUT c_1
+
+    UNTIL c_1 <> "y" AND c_1 <> "Y"
+
+END PROGRAM
