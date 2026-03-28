@@ -3,15 +3,14 @@ program HousingApp;
 var
     tmp: string;
     flag_L, flag_H, flag_F: string; 
-    val_LPH, val_HHD, val_FHD: LongInt;
+    val_LPH, val_HHD, val_FHD: integer; 
     r_flag, sesV: integer;
-    Net_Sal: double;
+    Net_Sal: real;
     H_Comm_Name, App_Name: string;
-    q_stat, calc_hH, calc_hF, calc_hL: double;
-    H_Acr: string[3];
-    c_str, c_1: string[1];
-    G_S, S_D, U_I, L_E, total_ex, eX_Approved, Savings: double;
-    errCode: integer;
+    q_stat, calc_hH, calc_hF, calc_hL: real;
+    H_Acr: string;
+    c_str, c_1: string;
+    G_S, S_D, U_I, L_E, total_ex, eX_Approved, Savings: real;
 
 function vlid(s: string): boolean;
 var
@@ -21,17 +20,16 @@ begin
     j := 1;
     vlid := true;
     if Length(s) = 0 then begin vlid := false; exit; end;
-    if s[j] = '-' then j := j + 1;
+    if s[1] = '-' then j := 2;
     while j <= Length(s) do
     begin
         if s[j] = '.' then
         begin
-            if d_count = 1 then begin Writeln('error at token .'); vlid := false; exit; end
+            if d_count = 1 then begin vlid := false; exit; end
             else d_count := 1;
         end
         else if not (s[j] in ['0'..'9']) then
         begin
-            Writeln('error at token ', s[j]);
             vlid := false;
             exit;
         end;
@@ -54,12 +52,12 @@ begin
             Write('Applicant name: '); Readln(App_Name);
 
             Write('Gross Salary: '); Readln(tmp);
-            if not vlid(tmp) then begin Write('Paused, Press ENTER to continue . . . '); Readln; halt; end;
-            Val(tmp, G_S, errCode);
+            if not vlid(tmp) then begin Readln; halt; end;
+            G_S := StringToFloat(tmp);
 
             Write('Total Salary Deductions: '); Readln(tmp);
-            if not vlid(tmp) then begin Write('Paused, Press ENTER to continue . . . '); Readln; halt; end;
-            Val(tmp, S_D, errCode);
+            if not vlid(tmp) then begin Readln; halt; end;
+            S_D := StringToFloat(tmp);
 
             Net_Sal := G_S - S_D;
 
@@ -98,11 +96,11 @@ begin
 
         Write('Applicant Total Utility Expenses: '); Readln(tmp);
         if not vlid(tmp) then begin Readln; halt; end;
-        Val(tmp, U_I, errCode);
+        U_I := StringToFloat(tmp);
 
         Write('Applicant Total Living Expenses: '); Readln(tmp);
         if not vlid(tmp) then begin Readln; halt; end;
-        Val(tmp, L_E, errCode);
+        L_E := StringToFloat(tmp);
 
         total_ex := U_I + L_E;
         Savings := Net_Sal - total_ex;
@@ -112,6 +110,7 @@ begin
         Writeln('-------------------------------');
         Writeln('Applicant Name: ', App_Name);
         Writeln('Housing Community: ', H_Comm_Name);
+        
         if H_Acr = 'LPH' then Writeln('Cost: $', val_LPH);
         if H_Acr = 'FHD' then Writeln('Cost: $', val_FHD);
         if H_Acr = 'HHD' then Writeln('Cost: $', val_HHD);
