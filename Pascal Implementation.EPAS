@@ -1,0 +1,111 @@
+program HousingApp;
+
+var
+    H_A, App_Name, H_C, Choice, SubChoice: string;
+    LPH, HHD, FHD: longint;
+    Valid, Retry: Boolean;
+    G_S, S_D, N_S, U_I, L_E, Total_Ex, Savings, Limit: real;
+
+begin
+    LPH := 150500;
+    HHD := 440000;
+    FHD := 700500;
+
+    repeat
+        repeat
+            Valid := TRUE;
+            Retry := FALSE;
+
+            write('Housing Community Acronym (3 Letters MAX): ');
+            readln(H_A);
+            write('Applicant name: ');
+            readln(App_Name);
+
+            write('Gross Salary: ');
+            readln(G_S);
+            write('Total Salary Deductions: ');
+            readln(S_D);
+
+            N_S := G_S - S_D;
+
+            if H_A = 'HHD' then
+            begin
+                Limit := HHD * 0.75;
+                if N_S >= Limit then
+                begin
+                    writeln('Applicant Qualify');
+                    H_C := 'Hauraruni Housing Development';
+                end
+                else
+                begin
+                    writeln('Applicant Not Qualify.');
+                    Valid := FALSE;
+                end;
+            end;
+
+            if H_A = 'FHD' then
+            begin
+                Limit := FHD * 0.75;
+                if N_S >= Limit then
+                begin
+                    writeln('Applicant Qualify');
+                    H_C := 'Fitzhope Housing Development';
+                end
+                else
+                begin
+                    writeln('Applicant Not Qualify.');
+                    Valid := FALSE;
+                end;
+            end;
+
+            if H_A = 'LPH' then
+            begin
+                Limit := LPH * 0.75;
+                if N_S >= Limit then
+                begin
+                    writeln('Applicant Qualify');
+                    H_C := 'La Parfaite Harmonie';
+                end
+                else
+                begin
+                    writeln('Applicant Not Qualify.');
+                    Valid := FALSE;
+                end;
+            end;
+
+            if Valid then
+            begin
+                write('Input Data for another applicant? [ N | y ]: ');
+                readln(SubChoice);
+                if (SubChoice = 'y') or (SubChoice = 'Y') then
+                    Retry := TRUE;
+            end;
+
+        until not Retry;
+
+        write('Applicant Total Utility Expenses: ');
+        readln(U_I);
+        write('Applicant Total Living Expenses: ');
+        readln(L_E);
+
+        Total_Ex := U_I + L_E;
+        Savings := N_S - Total_Ex;
+
+        writeln('-------------------------------');
+        writeln('Applicant Name: ', App_Name);
+        writeln('Housing Community: ', H_C);
+
+        if H_A = 'LPH' then writeln('Cost: $', LPH);
+        if H_A = 'FHD' then writeln('Cost: $', FHD);
+        if H_A = 'HHD' then writeln('Cost: $', HHD);
+
+        if Savings >= (Total_Ex * 0.5) then
+            writeln('Approval Status: Approved.')
+        else
+            writeln('Approval Status: Not Approved.');
+
+        write('Input Data for another applicant? [ N | y ]: ');
+        readln(Choice);
+
+    until (Choice <> 'y') and (Choice <> 'Y');
+end.
